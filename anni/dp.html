@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dharun & Poorva's 1st Month Anniversary</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f8e1e9, #fce4ec);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            cursor: none;
+        }
+
+        .custom-cursor {
+            position: fixed;
+            width: 24px;
+            height: 24px;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="%23ff6f91" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>') no-repeat center;
+            pointer-events: none;
+            z-index: 1000;
+            transform: translate(-50%, -50%);
+        }
+
+        .card-container {
+            perspective: 1000px;
+            z-index: 2;
+        }
+
+        .card {
+            width: 400px;
+            height: 600px;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.6s ease;
+            box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.1), -5px -5px 15px rgba(255, 255, 255, 0.8);
+            border-radius: 15px;
+            cursor: pointer;
+        }
+
+        .card.flipped {
+            transform: rotateY(180deg);
+        }
+
+        .card-front, .card-back {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            backface-visibility: hidden;
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: #fff;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .card-front {
+            background: linear-gradient(135deg, #fff, #f8e1e9);
+        }
+
+        .card-back {
+            transform: rotateY(180deg);
+            background: linear-gradient(135deg, #ff6f91, #f8e1e9);
+            color: #fff;
+        }
+
+        .card-front .image-container {
+            width: 100%;
+            height: 350px;
+            background: #fff;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .card-front img {
+            max-width: 100%;
+            max-height: 350px;
+            object-fit: contain;
+            border-radius: 10px;
+        }
+
+        .card-front h2 {
+            font-size: 32px;
+            color: #ff6f91;
+            margin-bottom: 15px;
+        }
+
+        .card-front p {
+            font-size: 20px;
+            color: #666;
+        }
+
+        .card-back .image-container {
+            width: 100%;
+            height: 250px;
+            background: #fff;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .card-back img.main-image {
+            max-width: 100%;
+            max-height: 250px;
+            object-fit: contain;
+            border-radius: 10px;
+        }
+
+        .card-back h1 {
+            font-size: 32px;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            margin-bottom: 15px;
+            opacity: 0;
+            transform: translateX(-150px);
+            transition: all 0.8s ease-out;
+        }
+
+        .card-back p:nth-child(2) {
+            font-size: 18px;
+            line-height: 1.6;
+            opacity: 0;
+            transform: translateX(150px);
+            transition: all 0.8s ease-out 0.2s;
+        }
+
+        .card-back p:nth-child(3) {
+            font-size: 18px;
+            line-height: 1.6;
+            opacity: 0;
+            transform: translateY(75px);
+            transition: all 0.8s ease-out 0.4s;
+        }
+
+        .card.flipped .card-back h1,
+        .card.flipped .card-back p:nth-child(2),
+        .card.flipped .card-back p:nth-child(3) {
+            opacity: 1;
+            transform: translateX(0) translateY(0);
+        }
+
+        .balloon {
+            position: fixed;
+            width: 60px;
+            height: 72px;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="60" height="72" viewBox="0 0 24 24"><path fill="%23ff6f91" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>') no-repeat center;
+            background-size: contain;
+            opacity: 0.7;
+            animation: float 8s linear infinite;
+            display: none;
+            z-index: 1;
+        }
+
+        .floating-image {
+            position: fixed;
+            width: 120px;
+            height: 144px;
+            object-fit: contain;
+            border: 2px solid #fff;
+            border-radius: 10px;
+            opacity: 0.8;
+            animation: float 7s linear infinite;
+            display: none;
+            z-index: 1;
+        }
+
+        .card.flipped ~ .balloon,
+        .card.flipped ~ .floating-image {
+            display: block;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+            }
+            100% {
+                transform: translateY(-100vh) rotate(360deg);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .card {
+                width: 350px;
+                height: 500px;
+            }
+
+            .card-front .image-container {
+                height: 250px;
+            }
+
+            .card-front img {
+                max-height: 250px;
+            }
+
+            .card-back .image-container {
+                height: 200px;
+            }
+
+            .card-back img.main-image {
+                max-height: 200px;
+            }
+
+            .card-front h2 {
+                font-size: 28px;
+            }
+
+            .card-front p {
+                font-size: 18px;
+            }
+
+            .card-back h1 {
+                font-size: 28px;
+            }
+
+            .card-back p:nth-child(2),
+            .card-back p:nth-child(3) {
+                font-size: 16px;
+            }
+
+            .balloon {
+                width: 50px;
+                height: 60px;
+            }
+
+            .floating-image {
+                width: 100px;
+                height: 120px;
+            }
+        }
+
+        audio {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="custom-cursor" id="cursor"></div>
+    <div class="card-container">
+        <div class="card" id="anniversaryCard">
+            <div class="card-front">
+                <div class="image-container">
+                    <img src="images/WhatsApp Image 2025-06-09 at 6.46.00 PM.jpeg" alt="Front Image">
+                </div>
+                <h2>Dharun & Poorva</h2>
+                <p>Click to celebrate our special moment!</p>
+            </div>
+            <div class="card-back">
+                <div class="image-container">
+                    <img class="main-image" src="images/WhatsApp Image 2025-06-09 at 6.46.00 PM (1).jpeg" alt="Anniversary Image">
+                </div>
+                <h1>Happy 1st Month Anniversary!</h1>
+                <p>Dear Mama, here's to our love and many more moments together! I wish to spend rest of my lifetime with you. YOU ARE A GEM. You are MY WORLD. I love you with all my heart and i am waiting to cherish more lovely moments with you.</p>
+                <p><i>I LOVE YOU MAMA</i></p>
+                <P>Love, Poorva 💕</P>
+            </div>
+        </div>
+    </div>
+    <audio id="bgMusic" autoplay loop>
+        <source src="audio/WhatsApp Audio 2025-06-10 at 2.49.37 PM.mpeg" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <script>
+        // Custom Cursor
+        const cursor = document.getElementById('cursor');
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+        });
+
+        // Card Flip and Balloon/Image Generation
+        const card = document.getElementById('anniversaryCard');
+        let balloonInterval = null;
+        let imageInterval = null;
+        const imageSources = [
+            'images/WhatsApp Image 2025-06-09 at 6.46.01 PM (1).jpeg',
+            'images/WhatsApp Image 2025-06-09 at 6.46.01 PM.jpeg',
+            'images/WhatsApp Image 2025-06-09 at 6.48.55 PM.jpeg'
+        ];
+
+        function createBalloon() {
+            const balloon = document.createElement('div');
+            balloon.classList.add('balloon');
+            balloon.style.left = Math.random() * 100 + 'vw';
+            balloon.style.animationDuration = Math.random() * 4 + 6 + 's';
+            balloon.style.display = card.classList.contains('flipped') ? 'block' : 'none';
+            document.body.appendChild(balloon);
+            setTimeout(() => {
+                balloon.remove();
+            }, 8000);
+        }
+
+        function createFloatingImage() {
+            const img = document.createElement('img');
+            img.classList.add('floating-image');
+            img.src = imageSources[Math.floor(Math.random() * imageSources.length)];
+            img.style.left = Math.random() * 100 + 'vw';
+            img.style.animationDuration = Math.random() * 3 + 5 + 's';
+            img.style.display = card.classList.contains('flipped') ? 'block' : 'none';
+            document.body.appendChild(img);
+            setTimeout(() => {
+                img.remove();
+            }, 8000);
+        }
+
+        card.addEventListener('click', () => {
+            card.classList.toggle('flipped');
+            
+            if (card.classList.contains('flipped')) {
+                // Start generating balloons and images
+                if (!balloonInterval) {
+                    balloonInterval = setInterval(createBalloon, 500);
+                }
+                if (!imageInterval) {
+                    imageInterval = setInterval(createFloatingImage, 1000);
+                }
+                document.querySelectorAll('.balloon, .floating-image').forEach(element => {
+                    element.style.display = 'block';
+                });
+            } else {
+                // Hide balloons and images when card is unflipped
+                document.querySelectorAll('.balloon, .floating-image').forEach(element => {
+                    element.style.display = 'none';
+                });
+                if (balloonInterval) {
+                    clearInterval(balloonInterval);
+                    balloonInterval = null;
+                }
+                if (imageInterval) {
+                    clearInterval(imageInterval);
+                    imageInterval = null;
+                }
+                // Reset animations when card is unflipped
+                document.querySelector('.card-back h1').style.opacity = '0';
+                document.querySelector('.card-back h1').style.transform = 'translateX(-150px)';
+                document.querySelector('.card-back p:nth-child(2)').style.opacity = '0';
+                document.querySelector('.card-back p:nth-child(2)').style.transform = 'translateX(150px)';
+                document.querySelector('.card-back p:nth-child(3)').style.opacity = '0';
+                document.querySelector('.card-back p:nth-child(3)').style.transform = 'translateY(75px)';
+            }
+        });
+
+        // Ensure music plays on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            const audio = document.getElementById('bgMusic');
+            audio.volume = 0.5; // Set volume to 50% to avoid being too loud
+            audio.play().catch(error => {
+                console.log('Autoplay was prevented:', error);
+                // Fallback: Attempt to play on first user interaction
+                document.addEventListener('click', () => {
+                    audio.play();
+                }, { once: true });
+            });
+        });
+    </script>
+</body>
+</html>
